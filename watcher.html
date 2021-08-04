@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script>
-      "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js";
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>JavaScript Framework Watcher</title>
   </head>
   <body>
@@ -25,7 +23,15 @@
     <h1>React</h1>
     <div id="reactData"></div>
 
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+
     <script>
+      //sloppy for now - this could be refactored as
+      //it is repetitive. Simplify to make the repetition
+      //something that can be used later - this could all be
+      //a single function using an array of data
       fetch("https://api.github.com/repos/vuejs/vue")
         .then(function (response) {
           return response.json();
@@ -70,6 +76,94 @@
         div.innerHTML = "Watchers: " + data.subscribers_count;
         mainDivContainer.appendChild(div);
       }
+      fetch("https://api.github.com/repos/emberjs/ember.js")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          appendData(data, "emberData");
+        })
+        .catch(function (err) {
+          console.log("error: " + err);
+        });
+      function appendData(data, id) {
+        var mainDivContainer = document.getElementById(id);
+        var div = document.createElement("div");
+        div.innerHTML = "Forks: " + data.forks;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Stars: " + data.stargazers_count;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Watchers: " + data.subscribers_count;
+        mainDivContainer.appendChild(div);
+      }
+      fetch("https://api.github.com/repos/sveltejs/svelte")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          appendData(data, "svelteData");
+        })
+        .catch(function (err) {
+          console.log("error: " + err);
+        });
+      function appendData(data, id) {
+        var mainDivContainer = document.getElementById(id);
+        var div = document.createElement("div");
+        div.innerHTML = "Forks: " + data.forks;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Stars: " + data.stargazers_count;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Watchers: " + data.subscribers_count;
+        mainDivContainer.appendChild(div);
+      }
+      fetch("https://api.github.com/repos/facebook/react")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          appendData(data, "reactData");
+        })
+        .catch(function (err) {
+          console.log("error: " + err);
+        });
+      function appendData(data, id) {
+        var mainDivContainer = document.getElementById(id);
+        var div = document.createElement("div");
+        div.innerHTML = "Forks: " + data.forks;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Stars: " + data.stargazers_count;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Watchers: " + data.subscribers_count;
+        mainDivContainer.appendChild(div);
+      }
+
+      // ########## Begin Chart.js Scripting ##########
+      const labels = ["January", "February", "March", "April", "May", "June"];
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "My First dataset",
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
+            data: [0, 10, 5, 2, 20, 30, 45],
+          },
+        ],
+      };
+      const config = {
+        type: "line",
+        data,
+        options: {},
+      };
+
+      // Creates the new chart
+      var myChart = new Chart(document.getElementById("myChart"), config);
     </script>
   </body>
 </html>
