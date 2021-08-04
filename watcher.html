@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js";
+    </script>
+    <title>JavaScript Framework Watcher</title>
+  </head>
+  <body>
+    <h1>Vue</h1>
+    <div id="vueData"></div>
+
+    <h1>Angular</h1>
+    <div id="angularData"></div>
+
+    <h1>Ember</h1>
+    <div id="emberData"></div>
+
+    <h1>Svelte</h1>
+    <div id="svelteData"></div>
+
+    <h1>React</h1>
+    <div id="reactData"></div>
+
+    <script>
+      fetch("https://api.github.com/repos/vuejs/vue")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          appendData(data, "vueData");
+        })
+        .catch(function (err) {
+          console.log("error: " + err);
+        });
+      function appendData(data, id) {
+        var mainDivContainer = document.getElementById(id);
+        var div = document.createElement("div");
+        div.innerHTML = "Forks: " + data.forks;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Stars: " + data.stargazers_count;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Watchers: " + data.subscribers_count;
+        mainDivContainer.appendChild(div);
+      }
+      fetch("https://api.github.com/repos/angular/angular.js")
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          appendData(data, "angularData");
+        })
+        .catch(function (err) {
+          console.log("error: " + err);
+        });
+      function appendData(data, id) {
+        var mainDivContainer = document.getElementById(id);
+        var div = document.createElement("div");
+        div.innerHTML = "Forks: " + data.forks;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Stars: " + data.stargazers_count;
+        mainDivContainer.appendChild(div);
+        var div = document.createElement("div");
+        div.innerHTML = "Watchers: " + data.subscribers_count;
+        mainDivContainer.appendChild(div);
+      }
+    </script>
+  </body>
+</html>
