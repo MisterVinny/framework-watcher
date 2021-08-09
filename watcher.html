@@ -8,162 +8,122 @@
     <title>JavaScript Framework Watcher</title>
   </head>
   <body>
-    <h1>Vue</h1>
-    <div id="vueData"></div>
-
-    <h1>Angular</h1>
-    <div id="angularData"></div>
-
-    <h1>Ember</h1>
-    <div id="emberData"></div>
-
-    <h1>Svelte</h1>
-    <div id="svelteData"></div>
-
-    <h1>React</h1>
-    <div id="reactData"></div>
+    <div>
+      <div style="float: left; padding-left: 64px">
+        <h1>Vue</h1>
+        <div id="vueDiv"></div>
+      </div>
+      <!-- <div style="float: left; padding-left: 64px">
+        <h1>Angular</h1>
+        <div id="angularData"></div>
+      </div>
+      <div style="float: left; padding-left: 64px">
+        <h1>Ember</h1>
+        <div id="emberData"></div>
+      </div>
+      <div style="float: left; padding-left: 64px">
+        <h1>Svelte</h1>
+        <div id="svelteData"></div>
+      </div>
+      <div style="float: left; padding-left: 64px">
+        <h1>React</h1>
+        <div id="reactData"></div>
+      </div> -->
+    </div>
 
     <div>
       <canvas id="myChart"></canvas>
     </div>
 
     <script>
+      // To be used to store values for each framework dataset
+      var vueData = {};
+      var angularData = {};
+      var emberData = {};
+      var svelteData = {};
+      var reactData = {};
+
       //sloppy for now - this could be refactored as
       //it is repetitive. Simplify to make the repetition
       //something that can be used later - this could all be
       //a single function using an array of data
-      fetch("https://api.github.com/repos/vuejs/vue")
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          appendData(data, "vueData");
+      // it will probably be removed entirely. This is just to verify datasets.
+
+      //      ######  gets Vue data   ######
+      fetch("https://api.github.com/repos/vuejs/vue", { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          this.vueData["forks"] = data.forks;
+          this.vueData.stars = data.stargazers_count;
+          this.vueData.watchers = data.subscribers_count;
+          appendData(vueData, "vueDiv");
         })
         .catch(function (err) {
           console.log("error: " + err);
         });
+
+      console.log(vueData);
+
+      // appendData function called above to append to div
       function appendData(data, id) {
         var mainDivContainer = document.getElementById(id);
         var div = document.createElement("div");
         div.innerHTML = "Forks: " + data.forks;
         mainDivContainer.appendChild(div);
         var div = document.createElement("div");
-        div.innerHTML = "Stars: " + data.stargazers_count;
+        div.innerHTML = "Stars: " + data.stars;
         mainDivContainer.appendChild(div);
         var div = document.createElement("div");
-        div.innerHTML = "Watchers: " + data.subscribers_count;
-        mainDivContainer.appendChild(div);
-      }
-      fetch("https://api.github.com/repos/angular/angular.js")
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          appendData(data, "angularData");
-        })
-        .catch(function (err) {
-          console.log("error: " + err);
-        });
-      function appendData(data, id) {
-        var mainDivContainer = document.getElementById(id);
-        var div = document.createElement("div");
-        div.innerHTML = "Forks: " + data.forks;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Stars: " + data.stargazers_count;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Watchers: " + data.subscribers_count;
-        mainDivContainer.appendChild(div);
-      }
-      fetch("https://api.github.com/repos/emberjs/ember.js")
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          appendData(data, "emberData");
-        })
-        .catch(function (err) {
-          console.log("error: " + err);
-        });
-      function appendData(data, id) {
-        var mainDivContainer = document.getElementById(id);
-        var div = document.createElement("div");
-        div.innerHTML = "Forks: " + data.forks;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Stars: " + data.stargazers_count;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Watchers: " + data.subscribers_count;
-        mainDivContainer.appendChild(div);
-      }
-      fetch("https://api.github.com/repos/sveltejs/svelte")
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          appendData(data, "svelteData");
-        })
-        .catch(function (err) {
-          console.log("error: " + err);
-        });
-      function appendData(data, id) {
-        var mainDivContainer = document.getElementById(id);
-        var div = document.createElement("div");
-        div.innerHTML = "Forks: " + data.forks;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Stars: " + data.stargazers_count;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Watchers: " + data.subscribers_count;
-        mainDivContainer.appendChild(div);
-      }
-      fetch("https://api.github.com/repos/facebook/react")
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          appendData(data, "reactData");
-        })
-        .catch(function (err) {
-          console.log("error: " + err);
-        });
-      function appendData(data, id) {
-        var mainDivContainer = document.getElementById(id);
-        var div = document.createElement("div");
-        div.innerHTML = "Forks: " + data.forks;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Stars: " + data.stargazers_count;
-        mainDivContainer.appendChild(div);
-        var div = document.createElement("div");
-        div.innerHTML = "Watchers: " + data.subscribers_count;
+        div.innerHTML = "Watchers: " + data.watchers;
         mainDivContainer.appendChild(div);
       }
 
-      // ########## Begin Chart.js Scripting ##########
-      const labels = ["January", "February", "March", "April", "May", "June"];
-      const data = {
-        labels: labels,
-        datasets: [
-          {
-            label: "My First dataset",
-            backgroundColor: "rgb(255, 99, 132)",
-            borderColor: "rgb(255, 99, 132)",
-            data: [0, 10, 5, 2, 20, 30, 45],
-          },
-        ],
-      };
-      const config = {
-        type: "line",
-        data,
-        options: {},
-      };
+      // // ########## Begin Chart.js Scripting ##########
 
-      // Creates the new chart
-      var myChart = new Chart(document.getElementById("myChart"), config);
+      // const labels = ["Forks", "Stars", "Watchers"];
+      // const data = {
+      //   labels: labels,
+      //   datasets: [
+      //     {
+      //       label: "Vue Data",
+      //       data: [25435, this.vueData.stars, 33456],
+      //       backgroundColor: [
+      //         "rgba(255, 99, 132, 0.2)",
+      //         "rgba(255, 159, 64, 0.2)",
+      //         "rgba(255, 205, 86, 0.2)",
+      //         "rgba(75, 192, 192, 0.2)",
+      //         "rgba(54, 162, 235, 0.2)",
+      //         "rgba(153, 102, 255, 0.2)",
+      //         "rgba(201, 203, 207, 0.2)",
+      //       ],
+      //       borderColor: [
+      //         "rgb(255, 99, 132)",
+      //         "rgb(255, 159, 64)",
+      //         "rgb(255, 205, 86)",
+      //         "rgb(75, 192, 192)",
+      //         "rgb(54, 162, 235)",
+      //         "rgb(153, 102, 255)",
+      //         "rgb(201, 203, 207)",
+      //       ],
+      //       borderWidth: 1,
+      //     },
+      //   ],
+      // };
+      // const config = {
+      //   type: "bar",
+      //   data: data,
+      //   options: {
+      //     scales: {
+      //       y: {
+      //         beginAtZero: true,
+      //       },
+      //     },
+      //   },
+      // };
+
+      // // Creates the new chart
+      // var myChart = new Chart(document.getElementById("myChart"), config);
     </script>
   </body>
 </html>
