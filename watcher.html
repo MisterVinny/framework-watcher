@@ -37,33 +37,41 @@
 
     <script>
       // To be used to store values for each framework dataset
-      var vueData = {};
+      var vueData = getData("vuejs/vue", "vueDiv");
       var angularData = {};
       var emberData = {};
       var svelteData = {};
       var reactData = {};
 
-      //sloppy for now - this could be refactored as
-      //it is repetitive. Simplify to make the repetition
-      //something that can be used later - this could all be
-      //a single function using an array of data
-      // it will probably be removed entirely. This is just to verify datasets.
+      // Need to completely re-work this. Because fetch is asynchronous,
+      // it can't just dump data into global variables the same way that the
+      // data section works in Vue. By the time chart.js is called, this data
+      // does not exist yet... maybe turn this into a function that pulls the data
+      // from within the chart.js data section instead. Then Chart will be
+      // fetching the data when it is needed. The tasks can be split - one to
+      // populate data DIV's on the page and then one to feed Chart.js what it needs.
+
+      // Follow-up to above, this works and will be more modular. Keep going.
+      // Currently populates page, but can now be used in Chart.js to get data
+      // AND populate the page in  one go.
 
       //      ######  gets Vue data   ######
-      fetch("https://api.github.com/repos/vuejs/vue", { method: "GET" })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          this.vueData["forks"] = data.forks;
-          this.vueData.stars = data.stargazers_count;
-          this.vueData.watchers = data.subscribers_count;
-          appendData(vueData, "vueDiv");
-        })
-        .catch(function (err) {
-          console.log("error: " + err);
-        });
-
-      console.log(vueData);
+      function getData(framework, divName) {
+        fetch(`https://api.github.com/repos/${framework}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const frameworkData = {
+              forks: data.forks,
+              stars: data.stargazers_count,
+              watchers: data.subscribers_count,
+            };
+            appendData(frameworkData, divName);
+            return frameworkData;
+          })
+          .catch(function (err) {
+            console.log("error: " + err);
+          });
+      }
 
       // appendData function called above to append to div
       function appendData(data, id) {
@@ -79,51 +87,35 @@
         mainDivContainer.appendChild(div);
       }
 
-      // // ########## Begin Chart.js Scripting ##########
+      // ########## Begin Chart.js Scripting ##########
+      console.log("later", vueData);
+      const labels = ["Forks", "Stars", "Watchers"];
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Vue Data",
+            data: [25435, vueData.stars, 33456],
+            backgroundColor: ["rgba(255, 99, 132, 0.2)"],
+            borderColor: ["rgb(255, 99, 132)"],
+            borderWidth: 1,
+          },
+        ],
+      };
+      const config = {
+        type: "bar",
+        data: data,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      };
 
-      // const labels = ["Forks", "Stars", "Watchers"];
-      // const data = {
-      //   labels: labels,
-      //   datasets: [
-      //     {
-      //       label: "Vue Data",
-      //       data: [25435, this.vueData.stars, 33456],
-      //       backgroundColor: [
-      //         "rgba(255, 99, 132, 0.2)",
-      //         "rgba(255, 159, 64, 0.2)",
-      //         "rgba(255, 205, 86, 0.2)",
-      //         "rgba(75, 192, 192, 0.2)",
-      //         "rgba(54, 162, 235, 0.2)",
-      //         "rgba(153, 102, 255, 0.2)",
-      //         "rgba(201, 203, 207, 0.2)",
-      //       ],
-      //       borderColor: [
-      //         "rgb(255, 99, 132)",
-      //         "rgb(255, 159, 64)",
-      //         "rgb(255, 205, 86)",
-      //         "rgb(75, 192, 192)",
-      //         "rgb(54, 162, 235)",
-      //         "rgb(153, 102, 255)",
-      //         "rgb(201, 203, 207)",
-      //       ],
-      //       borderWidth: 1,
-      //     },
-      //   ],
-      // };
-      // const config = {
-      //   type: "bar",
-      //   data: data,
-      //   options: {
-      //     scales: {
-      //       y: {
-      //         beginAtZero: true,
-      //       },
-      //     },
-      //   },
-      // };
-
-      // // Creates the new chart
-      // var myChart = new Chart(document.getElementById("myChart"), config);
+      // Creates the new chart
+      var myChart = new Chart(document.getElementById("myChart"), config);
     </script>
   </body>
 </html>
