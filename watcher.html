@@ -65,7 +65,6 @@
                 watchers: element.subscribers_count,
               });
             });
-            console.log("framework data", frameworkData);
             return frameworkData;
           })
           .then((formattedData) => {
@@ -99,25 +98,18 @@
         mainDivContainer.appendChild(div);
       }
 
-      function getRandomColor() {
-        var randomColor =
-          "#" + Math.floor(Math.random() * 16777215).toString(16);
-        //generates a random color -> #56eec7
-        return randomColor;
-      }
-
       // ########## Chart.js Create Chart Function ##########
       function createChart(chartData) {
         var data = {};
         data["labels"] = ["forks", "stars", "watchers"];
         data["datasets"] = [];
-        console.log("first data", data);
 
+        // Static color choices for each framework - for consistency.
         const bgColors = ["blue", "red", "cyan", "green", "orange"];
-        let chartLength = chartData.length;
-        for (i = 0; i < chartLength; i++) {
+
+        // Populates data["datasets"] with framework data contained in an object per set
+        for (i = 0; i < 5; i++) {
           let element = chartData[i];
-          console.log("element", element);
           data["datasets"].push({
             data: [element.forks, element.stars, element.watchers],
             backgroundColor: bgColors[i],
@@ -125,8 +117,8 @@
             label: element.name,
           });
         }
-        console.log("datasets", data.datasets);
 
+        // Configuration for the chart - horizontal un-stacked bar with legend at bottom
         const config = {
           type: "bar",
           data: data,
@@ -134,17 +126,22 @@
             indexAxis: "y",
             scales: {
               x: {
-                stacked: true,
+                stacked: false,
               },
               y: {
-                stacked: true,
+                stacked: false,
                 beginAtZero: true,
+              },
+            },
+            plugins: {
+              legend: {
+                position: "bottom",
               },
             },
           },
         };
 
-        // Creates the new chart
+        // Creates the chart
         var myChart = new Chart(document.getElementById("myChart"), config);
       }
 
