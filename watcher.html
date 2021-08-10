@@ -72,6 +72,10 @@
             formattedData.forEach((element) => {
               appendData(element);
             });
+            return formattedData;
+          })
+          .then((data) => {
+            createChart(data);
           })
           .catch((error) => {
             console.error(error);
@@ -95,27 +99,45 @@
         mainDivContainer.appendChild(div);
       }
 
+      function getRandomColor() {
+        var randomColor =
+          "#" + Math.floor(Math.random() * 16777215).toString(16);
+        //generates a random color -> #56eec7
+        return randomColor;
+      }
+
       // ########## Chart.js Create Chart Function ##########
-      function createChart() {
-        const labels = ["Forks", "Stars", "Watchers"];
-        const data = {
-          labels: labels,
-          datasets: [
-            {
-              label: "Vue Data",
-              data: [25435, 3334, 33456],
-              backgroundColor: ["rgba(255, 99, 132, 0.2)"],
-              borderColor: ["rgb(255, 99, 132)"],
-              borderWidth: 1,
-            },
-          ],
-        };
+      function createChart(chartData) {
+        var data = {};
+        data["labels"] = ["forks", "stars", "watchers"];
+        data["datasets"] = [];
+        console.log("first data", data);
+
+        const bgColors = ["blue", "red", "cyan", "green", "orange"];
+        let chartLength = chartData.length;
+        for (i = 0; i < chartLength; i++) {
+          let element = chartData[i];
+          console.log("element", element);
+          data["datasets"].push({
+            data: [element.forks, element.stars, element.watchers],
+            backgroundColor: bgColors[i],
+            borderColor: "gray",
+            label: element.name,
+          });
+        }
+        console.log("datasets", data.datasets);
+
         const config = {
           type: "bar",
           data: data,
           options: {
+            indexAxis: "y",
             scales: {
+              x: {
+                stacked: true,
+              },
               y: {
+                stacked: true,
                 beginAtZero: true,
               },
             },
