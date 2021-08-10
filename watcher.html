@@ -15,19 +15,19 @@
       </div>
       <!-- <div style="float: left; padding-left: 64px">
         <h1>Angular</h1>
-        <div id="angularData"></div>
+        <div id="angularDiv"></div>
       </div>
       <div style="float: left; padding-left: 64px">
         <h1>Ember</h1>
-        <div id="emberData"></div>
+        <div id="emberDiv"></div>
       </div>
       <div style="float: left; padding-left: 64px">
         <h1>Svelte</h1>
-        <div id="svelteData"></div>
+        <div id="svelteDiv"></div>
       </div>
       <div style="float: left; padding-left: 64px">
         <h1>React</h1>
-        <div id="reactData"></div>
+        <div id="reactDiv"></div>
       </div> -->
     </div>
 
@@ -38,11 +38,6 @@
     <script>
       // To be used to store values for each framework dataset
       var vueData = getData("vuejs/vue", "vueDiv");
-      var angularData = {};
-      var emberData = {};
-      var svelteData = {};
-      var reactData = {};
-
       // Need to completely re-work this. Because fetch is asynchronous,
       // it can't just dump data into global variables the same way that the
       // data section works in Vue. By the time chart.js is called, this data
@@ -55,21 +50,56 @@
       // Currently populates page, but can now be used in Chart.js to get data
       // AND populate the page in  one go.
 
+      // const frameworks = [
+      //   ["vuejs/vue", "vueDiv"],
+      //   ["angular/angular.js", "angularDiv"],
+      //   ["emberjs/ember.js", "emberDiv"],
+      //   ["sveltejs/svelte", "svelteDiv"],
+      //   ["facebook/react", "reactDiv"],
+      // ];
+
+      getData();
       //      ######  gets Vue data   ######
       function getData(framework, divName) {
-        fetch(`https://api.github.com/repos/${framework}`)
-          .then((response) => response.json())
-          .then((data) => {
-            const frameworkData = {
-              forks: data.forks,
-              stars: data.stargazers_count,
-              watchers: data.subscribers_count,
-            };
-            appendData(frameworkData, divName);
-            return frameworkData;
+        const baseRepoUrl = "https://api.github.com/repos/";
+        // fetch(`https://api.github.com/repos/${framework}`)
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //     let frameworkData = {
+        //       forks: data.forks,
+        //       stars: data.stargazers_count,
+        //       watchers: data.subscribers_count,
+        //     };
+        //     console.log("in get data", frameworkData);
+        //     appendData(frameworkData, divName);
+        //     return frameworkData;
+        //   })
+        //   .catch(function (err) {
+        //     console.log("error: " + err);
+        //   });
+        Promise.all([
+          fetch(`${baseRepoUrl}vuejs/vue`),
+          fetch(`${baseRepoUrl}angular/angular.js`),
+          fetch(`${baseRepoUrl}emberjs/ember.js`),
+          fetch(`${baseRepoUrl}sveltejs/svelte`),
+          fetch(`${baseRepoUrl}facebook/react`),
+        ])
+          .then(function (responses) {
+            return Promise.all(
+              responses.map(function (response) {
+                let jsonData = response.json();
+                console.log(jsonData);
+                let formattedData = {
+                  forks: jsonData.forks,
+                  stars: jsonData.stargazers_count,
+                  watchers: jsonData.subscribers_count,
+                };
+                return formattedData;
+              })
+            );
           })
-          .catch(function (err) {
-            console.log("error: " + err);
+          .then(function (data) {
+            console.log(data);
           });
       }
 
@@ -87,35 +117,36 @@
         mainDivContainer.appendChild(div);
       }
 
-      // ########## Begin Chart.js Scripting ##########
-      console.log("later", vueData);
-      const labels = ["Forks", "Stars", "Watchers"];
-      const data = {
-        labels: labels,
-        datasets: [
-          {
-            label: "Vue Data",
-            data: [25435, vueData.stars, 33456],
-            backgroundColor: ["rgba(255, 99, 132, 0.2)"],
-            borderColor: ["rgb(255, 99, 132)"],
-            borderWidth: 1,
-          },
-        ],
-      };
-      const config = {
-        type: "bar",
-        data: data,
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+      // ########## Chart.js Create Chart Function ##########
+      function createChart() {
+        const labels = ["Forks", "Stars", "Watchers"];
+        const data = {
+          labels: labels,
+          datasets: [
+            {
+              label: "Vue Data",
+              data: [25435, 3334, 33456],
+              backgroundColor: ["rgba(255, 99, 132, 0.2)"],
+              borderColor: ["rgb(255, 99, 132)"],
+              borderWidth: 1,
+            },
+          ],
+        };
+        const config = {
+          type: "bar",
+          data: data,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
             },
           },
-        },
-      };
+        };
 
-      // Creates the new chart
-      var myChart = new Chart(document.getElementById("myChart"), config);
+        // Creates the new chart
+        var myChart = new Chart(document.getElementById("myChart"), config);
+      }
     </script>
   </body>
 </html>
